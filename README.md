@@ -1,5 +1,5 @@
 # PowerPal
-<h2>SolVIT Hackathon 2025 Project</h2>h2<br>
+<h2>SolVIT Hackathon 2025 Project</h2><br>
 <h3>Problem Statement</h3>
 <h4>Home & Personal Energy Efficiency<br>
 •        Smart Home & Energy Automation<br>
