@@ -7,3 +7,7 @@ Best feature it shows you in how much time you can get back your invested money 
 <img src="images/Screenshot (142).png" alt="Dashboard" width="1000"/>
 <img src="images/Screenshot (143).png" alt="Dashboard" width="1000"/>
 <img src="images/Screenshot (145).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (150).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (151).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (152).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (153).png" alt="Dashboard" width="1000"/>
