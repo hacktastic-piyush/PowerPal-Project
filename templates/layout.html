@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerPal - Smart Home Energy Management</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <!-- GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+    <!-- Particles.js for interactive background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<style>
+    /* ... (CSS styles from the first part) ... */
+    :root {
+        --primary-green: #10B981;
+        --primary-blue: #3B82F6;
+        --light-green: #D1FAE5;
+        --light-blue: #DBEAFE;
+        --dark-green: #047857;
+        --dark-blue: #1E40AF;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #F9FAFB;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+    }
+
+    .progress-bar {
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+    }
+
+    .recommendation-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .recommendation-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Chart containers */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #c5c5c5;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a0a0a0;
+    }
+
+    /* Navbar active indicator */
+    .nav-indicator {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .mobile-menu.open {
+        transform: translateY(0);
+    }
+</style>
+</head>
+<body class="bg-gray-50">
+    <div id="particles-js" class="opacity-40"></div>
+    
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="text-primary-green flex items-center">
+                            <i class="fas fa-leaf text-2xl mr-2 text-green-500"></i>
+                            <span class="font-bold text-gray-800 text-xl">PowerPal</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:ml-8 md:flex md:space-x-8">
+                        <a href="/dashboard" class="text-gray-900 relative inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Dashboard
+                            <div class="nav-indicator w-full bg-green-500 left-0"></div>
+                        </a>
+                        <a href="/appliances" class="text-gray-500 hover:text-gray-700 relative inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Appliances
+                        </a>
+
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button onclick="window.location.href='/simulate'" 
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition-all duration-300 hidden md:block">
+    <i class="fas fa-bolt mr-2"></i> Simulate Savings
+</button>
+                    <button class="ml-4 text-gray-500 md:hidden focus:outline-none" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:hidden mobile-menu bg-white shadow-lg absolute w-full" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/dashboard" class="bg-green-50 text-green-500 block px-3 py-2 rounded-md text-base font-medium">
+                    Dashboard
+                </a>
+                <a href="/appliances" class="text-gray-500 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium">
+                    Appliances
+                </a>
+                <button class="w-full mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md transition-all duration-300">
+                    <i class="fas fa-bolt mr-2"></i> Simulate Savings
+                </button>
+            </div>
+        </div>
+    </nav>
+  <!-- Main Content Block -->
+  <main class="flex-grow pt-20">  <!-- Added pt-20 -->
+    
+    
+        <!-- Hero Section -->
+        <section class="hero-gradient text-white pt-32 pb-24 px-6 relative overflow-hidden">
+            <div class="bg-noise absolute inset-0"></div>
+            <div class="container mx-auto relative z-10">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="lg:w-1/2 mb-12 lg:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                        <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+                            <span class="block">Transform Your Home's</span>
+                            <span class="block">Energy <span class="text-yellow-300">Footprint</span></span>
+                        </h1>
+                        <p class="text-xl md:text-2xl font-light mb-8 text-white text-opacity-90">Take control of your energy consumption and reduce bills with our cutting-edge smart home solution.</p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="/signup" class="btn-pulse bg-white text-green-600 font-bold px-8 py-4 rounded-full text-xl hover:bg-green-50 transition duration-300 text-center shadow-lg">Get Started Now</a>
+                            <a href="#features" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full text-xl hover:bg-white hover:text-green-600 transition duration-300 text-center">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
+                        <div class="relative">
+                            <!-- Energy dashboard preview image with floating animation -->
+                            <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border-8 border-white floating">
+                                <div class="bg-green-50 h-10 flex items-center px-4">
+                                    <div class="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
+                                    <div class="flex-grow text-center text-sm text-gray-500">PowerPal Dashboard</div>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex justify-between mb-6">
+                                        <div class="text-xl font-bold text-gray-800">Energy Overview</div>
+                                        <div class="text-green-500 font-bold">-28% this month</div>
+                                    </div>
+                                    <div class="h-48 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg mb-6 flex items-end px-4 pb-4">
+                                        <div class="w-1/5 h-20 bg-blue-400 rounded-t-lg mx-1"></div>
+                                        <div class="w-1/5 h-28 bg-blue-500 rounded-t-lg mx-1"></div>
+                                        <div class="w-1/5 h-16 bg-blue-400 rounded-t-lg mx-1"></div>
+                                        <div class="w-1/5 h-32 bg-blue-500 rounded-t-lg mx-1"></div>
+                                        <div class="w-1/5 h-12 bg-green-500 rounded-t-lg mx-1 pulse-animation"></div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div class="p-3 bg-green-50 rounded-lg">
+                                            <div class="text-sm text-gray-500">Appliances</div>
+                                            <div class="font-bold text-gray-800">48%</div>
+                                        </div>
+                                        <div class="p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-sm text-gray-500">Lighting</div>
+                                            <div class="font-bold text-gray-800">27%</div>
+                                        </div>
+                                        <div class="p-3 bg-yellow-50 rounded-lg">
+                                            <div class="text-sm text-gray-500">HVAC</div>
+                                            <div class="font-bold text-gray-800">25%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Decorative elements -->
+                            <div class="absolute -top-10 -right-10 w-20 h-20 bg-yellow-300 rounded-full opacity-70 animate-pulse"></div>
+                            <div class="absolute -bottom-5 -left-5 w-16 h-16 bg-green-300 rounded-full opacity-70 animate-pulse delay-300"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wave SVG at bottom of hero section -->
+                <div class="absolute bottom-0 left-0 w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+                        <path fill="#F9FAFB" fill-opacity="1" d="M0,64L80,53.3C160,43,320,21,480,32C640,43,800,85,960,96C1120,107,1280,85,1360,74.7L1440,64L1440,100L1360,100C1280,100,1120,100,960,100C800,100,640,100,480,100C320,100,160,100,80,100L0,100Z"></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+    
+    
+        <!-- Features Section -->
+        <section id="features" class="py-20 px-6 bg-white">
+            <div class="container mx-auto text-center mb-12">
+                <span class="inline-block py-1 px-4 bg-green-100 text-green-700 font-medium rounded-full text-sm mb-4" data-aos="fade-up">POWERFUL FEATURES</span>
+                <h2 class="text-4xl font-bold text-gray-900 mb-8" data-aos="fade-up" data-aos-delay="100">Smart Energy Management <span class="text-gradient">Reimagined</span></h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">Our innovative platform combines cutting-edge technology with user-friendly interface to help you optimize your energy usage.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
+                    <div class="icon-lg bg-blue-100 text-blue-600 mb-6">
+                        <i class="fas fa-chart-line text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Real-Time Monitoring</h3>
+                    <p class="text-gray-600 mb-6">Track your energy usage in real-time with detailed analytics and insights to identify potential savings.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Minute-by-minute tracking</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Customizable dashboards</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Trend analysis & predictions</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="200">
+                    <div class="icon-lg bg-green-100 text-green-600 mb-6">
+                        <i class="fas fa-mobile-alt text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Smart Appliance Control</h3>
+                    <p class="text-gray-600 mb-6">Control all your home appliances remotely to optimize energy consumption and reduce waste.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Remote on/off functionality</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Scheduling & automation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Voice command integration</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="300">
+                    <div class="icon-lg bg-yellow-100 text-yellow-600 mb-6">
+                        <i class="fas fa-solar-panel text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Solar Integration</h3>
+                    <p class="text-gray-600 mb-6">Seamlessly integrate with your solar panel system to maximize renewable energy utilization.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Production monitoring</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Consumption optimization</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Grid/battery management</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="400">
+                    <div class="icon-lg bg-purple-100 text-purple-600 mb-6">
+                        <i class="fas fa-robot text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">AI-Powered Insights</h3>
+                    <p class="text-gray-600 mb-6">Leverage artificial intelligence to get personalized recommendations for energy optimization.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Usage pattern recognition</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Smart recommendations</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Predictive maintenance</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="500">
+                    <div class="icon-lg bg-red-100 text-red-600 mb-6">
+                        <i class="fas fa-bolt text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Energy Load Balancing</h3>
+                    <p class="text-gray-600 mb-6">Distribute energy consumption optimally throughout the day to reduce peak loads and costs.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Peak load management</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Demand response</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Time-of-use optimization</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card card-hover bg-white rounded-2xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="600">
+                    <div class="icon-lg bg-pink-100 text-pink-600 mb-6">
+                        <i class="fas fa-lock text-3xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Secure Data Protection</h3>
+                    <p class="text-gray-600 mb-6">Enterprise-grade security protocols to ensure your data and home network stay protected.</p>
+                    <ul class="text-left text-gray-600">
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>End-to-end encryption</span>
+                        </li>
+                        <li class="flex items-start mb-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Secure authentication</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Regular security updates</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works -->
+        <section class="py-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-16">
+                    <span class="inline-block py-1 px-4 bg-blue-100 text-blue-700 font-medium rounded-full text-sm mb-4" data-aos="fade-up">SIMPLE SETUP</span>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" data-aos="fade-up" data-aos-delay="100">How PowerPal Works</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">Get started in minutes with our easy-to-install solution</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="relative p-8 text-center" data-aos="fade-up" data-aos-delay="100">
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-blue-500 text-white flex items-center justify-center text-2xl font-bold">1</div>
+                        <div class="bg-white rounded-xl shadow-lg p-8 h-full card-hover">
+                            <div class="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-blue-50 rounded-full">
+                                <i class="fas fa-box-open text-4xl text-blue-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Install the Smart Hub</h3>
+                            <p class="text-gray-600">Simply plug in the UrjaSmart hub to your home network and connect it to your smart meter.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative p-8 text-center" data-aos="fade-up" data-aos-delay="200">
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center text-2xl font-bold">2</div>
+                        <div class="bg-white rounded-xl shadow-lg p-8 h-full card-hover">
+                            <div class="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-green-50 rounded-full">
+                                <i class="fas fa-mobile-alt text-4xl text-green-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Connect Your Devices</h3>
+                            <p class="text-gray-600">Download the app and follow the simple guided setup to connect your smart appliances and devices.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative p-8 text-center" data-aos="fade-up" data-aos-delay="300">
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-yellow-500 text-white flex items-center justify-center text-2xl font-bold">3</div>
+                        <div class="bg-white rounded-xl shadow-lg p-8 h-full card-hover">
+                            <div class="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-yellow-50 rounded-full">
+                                <i class="fas fa-chart-pie text-4xl text-yellow-500"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Start Saving</h3>
+                            <p class="text-gray-600">Monitor, analyze, and optimize your energy consumption to start seeing savings on your utility bills.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Benefits Section -->
+        <section id="benefits" class="py-20 px-6 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-16">
+                    <span class="inline-block py-1 px-4 bg-green-100 text-green-700 font-medium rounded-full text-sm mb-4" data-aos="fade-up">WHY CHOOSE US</span>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" data-aos="fade-up" data-aos-delay="100">Benefits of PowerPal</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">Our integrated solution offers numerous advantages for homeowners</p>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="lg:w-1/2 order-2 lg:order-1" data-aos="fade-right" data-aos-duration="1000">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-green-50 p-6 rounded-xl hover:shadow-md transition-all duration-300">
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Save Money</h3>
+                                <p class="text-gray-600">Reduce your utility bills by up to 30% through intelligent energy optimization.</p>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-6 rounded-xl hover:shadow-md transition-all duration-300">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-leaf text-blue-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Eco-Friendly</h3>
+                                <p class="text-gray-600">Reduce your carbon footprint and contribute to a sustainable future.</p>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-6 rounded-xl hover:shadow-md transition-all duration-300">
+                                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-hand-point-up text-yellow-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">User-Friendly</h3>
+                                <p class="text-gray-600">Intuitive interface makes energy management accessible for everyone.</p>
+                            </div>
+                            
+                            <div class="bg-purple-50 p-6 rounded-xl hover:shadow-md transition-all duration-300">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-sync-alt text-purple-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Future-Ready</h3>
+                                <p class="text-gray-600">Regular updates ensure compatibility with emerging technologies.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2 order-1 lg:order-2 mb-12 lg:mb-0" data-aos="fade-left" data-aos-duration="1000">
+                        <img src="/api/placeholder/600/400" alt="Benefits illustration" class="rounded-2xl shadow-2xl mx-auto max-w-md">
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Statistics Section -->
+        <section id="stats" class="py-20 px-6 bg-gradient-to-r from-green-500 to-blue-600 text-white relative">
+            <div class="bg-noise absolute inset-0"></div>
+            <div class="container mx-auto relative z-10 counter-section">
+                <div class="text-center mb-16">
+                    <span class="inline-block py-1 px-4 bg-white bg-opacity-20 font-medium rounded-full text-sm mb-4" data-aos="fade-up">OUR IMPACT</span>
+                    <h2 class="text-4xl font-bold mb-4" data-aos="fade-up" data-aos-delay="100">Making a Difference Together</h2>
+                    <p class="text-xl text-white text-opacity-90 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">Join thousands of households already saving energy and reducing their carbon footprint</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center p-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl" data-aos="fade-up" data-aos-delay="100">
+                        <div class="counter-item mb-2">28K+</div>
+                        <h3 class="text-xl font-semibold mb-2">Active Users</h3>
+                        <p class="text-white text-opacity-80">Across 14 countries worldwide</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl" data-aos="fade-up" data-aos-delay="200">
+                        <div class="counter-item mb-2">32%</div>
+                        <h3 class="text-xl font-semibold mb-2">Average Savings</h3>
+                        <p class="text-white text-opacity-80">On monthly energy bills</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl" data-aos="fade-up" data-aos-delay="300">
+                        <div class="counter-item mb-2">15M+</div>
+                        <h3 class="text-xl font-semibold mb-2">kWh Saved</h3>
+                        <p class="text-white text-opacity-80">In the last year alone</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl" data-aos="fade-up" data-aos-delay="400">
+                        <div class="counter-item mb-2">8.7K</div>
+                        <h3 class="text-xl font-semibold mb-2">Tons of CO₂</h3>
+                        <p class="text-white text-opacity-80">Emissions prevented</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 px-6 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-16">
+                    <span class="inline-block py-1 px-4 bg-blue-100 text-blue-700 font-medium rounded-full text-sm mb-4" data-aos="fade-up">TESTIMONIALS</span>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4" data-aos="fade-up" data-aos-delay="100">What Our Users Say</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">Real feedback from real users who have transformed their energy usage</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="testimonial-card bg-gray-50 p-8 rounded-2xl shadow-md" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center mb-6">
+                            <img src="/api/placeholder/50/50" alt="User" class="w-14 h-14 rounded-full">
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-800">Sarah Johnson</h4>
+                                <p class="text-gray-500">Homeowner, California</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"Since installing UrjaSmart, our electricity bill has gone down by almost 40%! The app makes it so easy to see where we're using energy inefficiently."</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card bg-gray-50 p-8 rounded-2xl shadow-md" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center mb-6">
+                            <img src="/api/placeholder/50/50" alt="User" class="w-14 h-14 rounded-full">
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-800">Mark Reynolds</h4>
+                                <p class="text-gray-500">Tech Enthusiast, London</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"The integration with my solar panels is seamless. I can actually see when I'm producing excess energy and optimize my consumption accordingly."</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card bg-gray-50 p-8 rounded-2xl shadow-md" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center mb-6">
+                            <img src="/api/placeholder/50/50" alt="User" class="w-14 h-14 rounded-full">
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-800">Elena Martinez</h4>
+                                <p class="text-gray-500">Family Home, Spain</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">"With four kids, our energy bills were through the roof. UrjaSmart identified that our old refrigerator was the culprit. Replaced it and saved a fortune!"</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- CTA Section -->
+        <section id="get-started" class="py-20 px-6 bg-gradient-to-r from-blue-500 to-green-400 text-white relative">
+            <div class="bg-noise absolute inset-0"></div>
+            <div class="container mx-auto relative z-10">
+                <div class="max-w-5xl mx-auto bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-12 rounded-3xl shadow-xl" data-aos="zoom-in">
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <div class="lg:w-2/3 mb-8 lg:mb-0 lg:pr-12">
+                            <h2 class="text-4xl font-bold mb-6">Ready to Transform Your Energy Usage?</h2>
+                            <p class="text-xl mb-8 text-white text-opacity-90">Join thousands of satisfied customers who are saving money and reducing their carbon footprint with UrjaSmart.</p>
+                            <div class="grid grid-cols-2 gap-6 mb-8">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-yellow-300 text-2xl mr-3"></i>
+                                    <span>30-day free trial</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-yellow-300 text-2xl mr-3"></i>
+                                    <span>No credit card required</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-yellow-300 text-2xl mr-3"></i>
+                                    <span>Free installation guide</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-yellow-300 text-2xl mr-3"></i>
+                                    <span>24/7 customer support</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:w-1/3 light-card p-8">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Get Started Today</h3>
+                            <form>
+                                <div class="mb-4">
+                                    <input type="text" placeholder="Your Name" class="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-4">
+                                    <input type="email" placeholder="Email Address" class="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                </div>
+                                <div class="mb-6">
+                                    <select class="w-full px-4 py-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                        <option value="" disabled selected>Select Package</option>
+                                        <option value="basic">Basic - $9.99/month</option>
+                                        <option value="premium">Premium - $19.99/month</option>
+                                        <option value="ultimate">Ultimate - $29.99/month</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="cta-btn w-full py-3 px-6 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold rounded-lg hover:shadow-lg transform transition duration-300">Start Your Free Trial</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+  
+</main>
+  
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16 px-6">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center mb-6">
+                        <div class="relative">
+                            <i class="fas fa-leaf text-3xl text-green-400 absolute left-0 top-0 opacity-50 transform rotate-12"></i>
+                            <i class="fas fa-leaf text-3xl text-green-400 z-10"></i>
+                        </div>
+                        <span class="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">UrjaSmart</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">Transforming the way homes consume energy with smart, sustainable solutions.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500 transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-500 transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-700 transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="text-gray-400 hover:text-green-400 transition duration-300">Features</a></li>
+                        <li><a href="#benefits" class="text-gray-400 hover:text-green-400 transition duration-300">Benefits</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-green-400 transition duration-300">Testimonials</a></li>
+                        <li><a href="#get-started" class="text-gray-400 hover:text-green-400 transition duration-300">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Support</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">Installation Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition duration-300">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-green-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">123 Green Energy Street, Solar Valley, CA 94123</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt text-green-400 mr-3"></i>
+                            <span class="text-gray-400">+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-green-400 mr-3"></i>
+                            <span class="text-gray-400">info@urjasmart.com</span>
+                        </li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="text-sm font-semibold uppercase text-gray-500 mb-3">Subscribe to Newsletter</h4>
+                        <div class="flex">
+                            <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg bg-gray-800 text-white focus:outline-none focus:ring-1 focus:ring-green-400 w-full">
+                            <button class="bg-green-500 px-4 py-2 rounded-r-lg hover:bg-green-600 transition duration-300">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 UrjaSmart. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenuButton.classList.toggle('menu-open');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    mobileMenuButton.classList.remove('menu-open');
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#0CCE6B' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#3E7BFA',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'grab' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    grab: { distance: 140, line_linked: { opacity: 1 } },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // GSAP animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Counter animation
+        const counters = document.querySelectorAll('.counter-item');
+        counters.forEach(counter => {
+            let target = counter.textContent;
+            let numTarget = parseInt(target.replace(/\D/g, ''));
+            
+            // Set initial value
+            counter.textContent = "0";
+            
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 80%",
+                onEnter: () => {
+                    let count = 0;
+                    const updateCounter = () => {
+                        const increment = numTarget / 60;
+                        if (count < numTarget) {
+                            count += increment;
+                            counter.textContent = Math.ceil(count) + (target.includes('+') ? '+' : target.includes('%') ? '%' : '');
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    };
+                    updateCounter();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

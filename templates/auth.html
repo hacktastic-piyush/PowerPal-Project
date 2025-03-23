@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="flex items-center justify-center min-h-screen py-10 px-4">
+    <div class="card-float bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl p-8 max-w-md w-full relative">
+        <!-- Logo Container -->
+        <div class="logo-pulse absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 text-white flex items-center justify-center rounded-full shadow-lg">
+            <div class="absolute inset-0 bg-white rounded-full scale-90 opacity-30"></div>
+            <i class="fas fa-bolt text-2xl"></i>
+        </div>
+        
+        <div class="mt-10 mb-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-blue-600">PowerPal</span>
+            </h2>
+            <p class="text-sm text-center text-gray-600 mt-1">Smart Energy Management</p>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="relative min-h-[300px]">
+            <!-- Login Form -->
+            <div id="loginForm" class="form-container">
+                <h3 class="text-xl font-semibold text-gray-700 text-center">Welcome Back</h3>
+                <form action="/login" method="POST" class="mt-6 space-y-5">
+                    <div class="relative">
+                        <span class="absolute left-3 top-3.5 text-gray-400"><i class="fas fa-envelope"></i></span>
+                        <input type="email" name="email" placeholder="Email" required class="input-field w-full p-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-50">
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3.5 text-gray-400"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="password" placeholder="Password" required class="input-field w-full p-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-50">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105">Sign In</button>
+                </form>
+                <p class="text-sm text-center text-gray-600 mt-4">Don't have an account? <a href="#" class="text-green-600 font-semibold" onclick="toggleForm()">Create account</a></p>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="form-container hidden">
+                <h3 class="text-xl font-semibold text-gray-700 text-center">Create Account</h3>
+                <form action="/signup" method="POST" class="mt-6 space-y-4">
+                    <div class="relative">
+                        <span class="absolute left-3 top-3.5 text-gray-400"><i class="fas fa-user"></i></span>
+                        <input type="text" name="username" placeholder="Username" required class="input-field w-full p-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-50">
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3.5 text-gray-400"><i class="fas fa-envelope"></i></span>
+                        <input type="email" name="email" placeholder="Email" required class="input-field w-full p-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-50">
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3.5 text-gray-400"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="password" placeholder="Password" required class="input-field w-full p-3 pl-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-50">
+                    </div>
+                    <button type="submit" class="w-full bg-green-500 text-white p-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition transform hover:scale-105">Create Account</button>
+                </form>
+                <p class="text-sm text-center text-gray-600 mt-4">Already have an account? <a href="#" class="text-blue-600 font-semibold" onclick="toggleForm()">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleForm() {
+        document.getElementById('loginForm').classList.toggle('hidden');
+        document.getElementById('signupForm').classList.toggle('hidden');
+    }
+</script>
+{% endblock %}

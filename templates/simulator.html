@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Savings Simulator - EcoSmart Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-green-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">EcoSmart Home</h1>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Dashboard</a>
+                <a href="/appliances" class="hover:underline">Appliances</a>
+                <a href="/simulator" class="hover:underline font-bold border-b-2 border-white pb-1">Savings Simulator</a>
+                <a href="/reports" class="hover:underline">Reports</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto py-6 px-4">
+        <!-- Intro Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Energy Savings Simulator</h1>
+            <p class="text-gray-600 mb-4">Explore how different energy choices can impact your finances and carbon footprint over time. Make more informed decisions with our interactive simulator.</p>
+            
+            <div class="bg-blue-50 p-4 rounded-md">
+                <h3 class="font-semibold text-blue-700 mb-2">Your Current Energy Profile</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Monthly Energy Consumption</p>
+                        <p class="text-xl font-bold">380 kWh</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Monthly Bill</p>
+                        <p class="text-xl font-bold">₹3,040</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Annual Carbon Footprint</p>
+                        <p class="text-xl font-bold">2,736 kg CO₂</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Simulation Options Tabs -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button id="tab-appliances" class="tab-button py-2 px-4 border-b-2 font-medium text-sm border-green-500 text-green-600">
+                        Appliance Upgrades
+                    </button>
+                    <button id="tab-solar" class="tab-button py-2 px-4 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700">
+                        Solar Installation
+                    </button>
+                    <button id="tab-habits" class="tab-button py-2 px-4 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700">
+                        Usage Habits
+                    </button>
+                </nav>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="py-4">
+                <!-- Appliance Upgrades Tab -->
+                <div id="content-appliances" class="tab-content">
+                    <h3 class="text-lg font-semibold mb-4">Simulate Appliance Upgrades</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Appliance Selection -->
+                        <div>
+                            <h4 class="font-medium mb-2">Select Appliances to Upgrade</h4>
+                            <div class="space-y-3 mb-4 max-h-80 overflow-y-auto p-2">
+                                <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                    <input type="checkbox" id="upgrade-ac" class="upgrade-checkbox h-5 w-5 text-green-600" data-id="ac">
+                                    <label for="upgrade-ac" class="ml-3 flex-1">
+                                        <div class="font-medium">Air Conditioner (1.5 Ton)</div>
+                                        <div class="text-sm text-gray-600">Current: 1,800W • 3★ • ₹1,120/month</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                    <input type="checkbox" id="upgrade-fridge" class="upgrade-checkbox h-5 w-5 text-green-600" data-id="fridge">
+                                    <label for="upgrade-fridge" class="ml-3 flex-1">
+                                        <div class="font-medium">Refrigerator (Double Door)</div>
+                                        <div class="text-sm text-gray-600">Current: 200W • 2★ • ₹480/month</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                    <input type="checkbox" id="upgrade-washing" class="upgrade-checkbox h-5 w-5 text-green-600" data-id="washing">
+                                    <label for="upgrade-washing" class="ml-3 flex-1">
+                                        <div class="font-medium">Washing Machine (6.5 kg)</div>
+                                        <div class="text-sm text-gray-600">Current: 500W • 3★ • ₹220/month</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                    <input type="checkbox" id="upgrade-tv" class="upgrade-checkbox h-5 w-5 text-green-600" data-id="tv">
+                                    <label for="upgrade-tv" class="ml-3 flex-1">
+                                        <div class="font-medium">LED TV (43 inch)</div>
+                                        <div class="text-sm text-gray-600">Current: 120W • 4★ • ₹90/month</div>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50">
+                                    <input type="checkbox" id="upgrade-lights" class="upgrade-checkbox h-5 w-5 text-green-600" data-id="lights">
+                                    <label for="upgrade-lights" class="ml-3 flex-1">
+                                        <div class="font-medium">All Lighting (10 bulbs)</div>
+                                        <div class="text-sm text-gray-600">Current: 600W total • CFL • ₹150/month</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h4 class="font-medium mb-2">Upgrade Options</h4>
+                                <div id="upgrade-options" class="p-4 bg-gray-50 rounded-md text-center text-gray-500">
+                                    Select an appliance to see upgrade options
+                                </div>
+                                
+                                <!-- Sample upgrade option (hidden by default) -->
+                                <div id="upgrade-ac-options" class="upgrade-option-panel hidden space-y-4 p-4 bg-gray-50 rounded-md">
+                                    <h5 class="font-medium">Air Conditioner Upgrade Options</h5>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="ac-upgrade" id="ac-option1" class="h-4 w-4 text-green-600" data-efficiency="5" data-cost="45000" data-monthly="360" checked>
+                                        <label for="ac-option1" class="ml-3 flex-1">
+                                            <div class="font-medium">5★ Inverter AC (1.5 Ton)</div>
+                                            <div class="text-sm text-gray-600">800W • ₹45,000 • ₹360/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹760/month (68% reduction)</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="ac-upgrade" id="ac-option2" class="h-4 w-4 text-green-600" data-efficiency="4" data-cost="36000" data-monthly="480">
+                                        <label for="ac-option2" class="ml-3 flex-1">
+                                            <div class="font-medium">4★ Inverter AC (1.5 Ton)</div>
+                                            <div class="text-sm text-gray-600">1,000W • ₹36,000 • ₹480/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹640/month (57% reduction)</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="ac-upgrade" id="ac-option3" class="h-4 w-4 text-green-600" data-efficiency="3" data-cost="28000" data-monthly="680">
+                                        <label for="ac-option3" class="ml-3 flex-1">
+                                            <div class="font-medium">3★ Inverter AC (1.5 Ton)</div>
+                                            <div class="text-sm text-gray-600">1,200W • ₹28,000 • ₹680/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹440/month (39% reduction)</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div id="upgrade-fridge-options" class="upgrade-option-panel hidden space-y-4 p-4 bg-gray-50 rounded-md">
+                                    <h5 class="font-medium">Refrigerator Upgrade Options</h5>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="fridge-upgrade" id="fridge-option1" class="h-4 w-4 text-green-600" data-efficiency="5" data-cost="32000" data-monthly="160" checked>
+                                        <label for="fridge-option1" class="ml-3 flex-1">
+                                            <div class="font-medium">5★ Inverter Refrigerator</div>
+                                            <div class="text-sm text-gray-600">90W • ₹32,000 • ₹160/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹320/month (67% reduction)</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="fridge-upgrade" id="fridge-option2" class="h-4 w-4 text-green-600" data-efficiency="4" data-cost="25000" data-monthly="220">
+                                        <label for="fridge-option2" class="ml-3 flex-1">
+                                            <div class="font-medium">4★ Inverter Refrigerator</div>
+                                            <div class="text-sm text-gray-600">120W • ₹25,000 • ₹220/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹260/month (54% reduction)</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div id="upgrade-lights-options" class="upgrade-option-panel hidden space-y-4 p-4 bg-gray-50 rounded-md">
+                                    <h5 class="font-medium">Lighting Upgrade Options</h5>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="lights-upgrade" id="lights-option1" class="h-4 w-4 text-green-600" data-efficiency="5" data-cost="2500" data-monthly="30" checked>
+                                        <label for="lights-option1" class="ml-3 flex-1">
+                                            <div class="font-medium">LED Bulbs (9W x 10)</div>
+                                            <div class="text-sm text-gray-600">90W total • ₹2,500 • ₹30/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹120/month (80% reduction)</div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center p-3 border border-gray-200 rounded-md bg-white">
+                                        <input type="radio" name="lights-upgrade" id="lights-option2" class="h-4 w-4 text-green-600" data-efficiency="4" data-cost="3500" data-monthly="25">
+                                        <label for="lights-option2" class="ml-3 flex-1">
+                                            <div class="font-medium">Smart LED Bulbs (7W x 10)</div>
+                                            <div class="text-sm text-gray-600">70W total • ₹3,500 • ₹25/month</div>
+                                            <div class="text-xs text-green-600">Saves ₹125/month (83% reduction)</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Simulation Results -->
+                        <div>
+                            <h4 class="font-medium mb-2">Savings Simulation</h4>
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <div class="mb-3">
+                                    <label for="simulation-years" class="block text-sm font-medium text-gray-700 mb-1">Simulation Period (years)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="simulation-years" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="years-value" class="text-sm font-medium bg-green-100 text-green-800 py-1 px-2 rounded-md">5</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label for="electricity-rate" class="block text-sm font-medium text-gray-700 mb-1">Electricity Rate (₹/kWh)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="electricity-rate" min="5" max="15" value="8" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="rate-value" class="text-sm font-medium bg-green-100 text-green-800 py-1 px-2 rounded-md">₹8.0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white p-4 rounded-md shadow-sm mb-4">
+                                    <h5 class="font-medium mb-3">Total Savings Summary</h5>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <p class="text-sm text-gray-600">Initial Investment</p>
+                                            <p id="total-investment" class="text-lg font-bold">₹0</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Monthly Savings</p>
+                                            <p id="monthly-savings" class="text-lg font-bold text-green-600">₹0</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Total Savings (5 years)</p>
+                                            <p id="total-savings" class="text-lg font-bold text-green-600">₹0</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Break-even Point</p>
+                                            <p id="breakeven-point" class="text-lg font-bold">N/A</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="font-medium mb-2">Savings Over Time</h5>
+                                <div class="bg-white rounded-md p-2">
+                                    <canvas id="savingsChart" height="200"></canvas>
+                                </div>
+                                
+                                <div class="mt-4 text-center">
+                                    <button id="generate-report" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md">
+                                        Generate Detailed Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solar Installation Tab -->
+                <div id="content-solar" class="tab-content hidden">
+                    <h3 class="text-lg font-semibold mb-4">Simulate Solar Installation</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Solar Inputs -->
+                        <div>
+                            <h4 class="font-medium mb-2">Configure Your Solar System</h4>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label for="roof-area" class="block text-sm font-medium text-gray-700 mb-1">Available Roof Area (sqm)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="roof-area" min="10" max="100" value="30" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="area-value" class="text-sm font-medium bg-blue-100 text-blue-800 py-1 px-2 rounded-md">30 m²</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="system-capacity" class="block text-sm font-medium text-gray-700 mb-1">System Capacity</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="system-capacity" min="1" max="10" value="3" step="0.5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="capacity-value" class="text-sm font-medium bg-blue-100 text-blue-800 py-1 px-2 rounded-md">3 kW</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="panel-type" class="block text-sm font-medium text-gray-700 mb-1">Panel Type</label>
+                                    <select id="panel-type" class="w-full p-2 border border-gray-300 rounded-md">
+                                        <option value="monocrystalline">Monocrystalline (High Efficiency)</option>
+                                        <option value="polycrystalline" selected>Polycrystalline (Standard)</option>
+                                        <option value="thinfilm">Thin Film (Lower Cost)</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="installation-type" class="block text-sm font-medium text-gray-700 mb-1">Installation Type</label>
+                                    <select id="installation-type" class="w-full p-2 border border-gray-300 rounded-md">
+                                        <option value="grid-tied" selected>Grid-Tied (No Battery)</option>
+                                        <option value="hybrid">Hybrid (With Battery Backup)</option>
+                                        <option value="off-grid">Off-Grid (Complete Battery System)</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="battery-section" class="hidden">
+                                    <label for="battery-capacity" class="block text-sm font-medium text-gray-700 mb-1">Battery Capacity (kWh)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="battery-capacity" min="2" max="20" value="5" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="battery-value" class="text-sm font-medium bg-blue-100 text-blue-800 py-1 px-2 rounded-md">5 kWh</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-md mb-4">
+                                <h5 class="font-medium text-yellow-800 mb-2">Subsidy Options</h5>
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" id="subsidy-check" class="h-4 w-4 text-green-600" checked>
+                                    <label for="subsidy-check" class="ml-2 text-sm text-gray-700">
+                                        Apply Government Subsidy (40% up to 3kW, 20% for 3-10kW)
+                                    </label>
+                                </div>
+                                <p class="text-xs text-yellow-700">Based on MNRE guidelines for residential solar installations</p>
+                            </div>
+                            
+                            <div class="bg-blue-50 p-4 rounded-md">
+                                <h5 class="font-medium text-blue-800 mb-2">System Cost Breakdown</h5>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span>Solar Panels & Mounting</span>
+                                        <span id="panels-cost">₹1,50,000</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Inverter & Balance of System</span>
+                                        <span id="inverter-cost">₹45,000</span>
+                                    </div>
+                                    <div id="battery-cost-row" class="flex justify-between hidden">
+                                        <span>Battery Storage System</span>
+                                        <span id="battery-cost">₹0</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Installation & Labor</span>
+                                        <span id="installation-cost">₹25,000</span>
+                                    </div>
+                                    <div class="flex justify-between text-green-700">
+                                        <span>Government Subsidy</span>
+                                        <span id="subsidy-amount">-₹60,000</span>
+                                    </div>
+                                    <div class="border-t border-blue-200 pt-1 flex justify-between font-bold">
+                                        <span>Total Investment</span>
+                                        <span id="solar-total-cost">₹1,60,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Solar Results -->
+                        <div>
+                            <h4 class="font-medium mb-2">Solar Power Generation & Savings</h4>
+                            
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <div class="mb-3">
+                                    <label for="solar-years" class="block text-sm font-medium text-gray-700 mb-1">Simulation Period (years)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="range" id="solar-years" min="5" max="25" value="15" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span id="solar-years-value" class="text-sm font-medium bg-green-100 text-green-800 py-1 px-2 rounded-md">15</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="solar-location" class="block text-sm font-medium text-gray-700 mb-1">Your Location</label>
+                                    <select id="solar-location" class="w-full p-2 border border-gray-300 rounded-md">
+                                        <option value="delhi">Delhi (5.5 kWh/m²/day)</option>
+                                        <option value="mumbai" selected>Mumbai (5.2 kWh/m²/day)</option>
+                                        <option value="bangalore">Bangalore (5.4 kWh/m²/day)</option>
+                                        <option value="chennai">Chennai (5.7 kWh/m²/day)</option>
+                                        <option value="kolkata">Kolkata (4.8 kWh/m²/day)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <p class="text-sm text-gray-600">Daily Generation (Avg)</p>
+                                        <p id="daily-generation" class="text-lg font-bold">12.0 kWh</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <p class="text-sm text-gray-600">Monthly Generation</p>
+                                        <p id="monthly-generation" class="text-lg font-bold">360 kWh</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <p class="text-sm text-gray-600">Self-Consumption</p>
+                                        <p id="self-consumption" class="text-lg font-bold">85%</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <p class="text-sm text-gray-600">Grid Export</p>
+                                        <p id="grid-export" class="text-lg font-bold">15%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white p-4 rounded-md shadow-sm mb-4">
+                                    <h5 class="font-medium mb-3">Financial Analysis</h5>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <p class="text-sm text-gray-600">Initial Investment</p>
+                                            <p id="solar-investment" class="text-lg font-bold">₹1,60,000</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Monthly Savings</p>
+                                            <p id="solar-monthly-savings" class="text-lg font-bold text-green-600">₹2,480</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Total Savings (15 years)</p>
+                                            <p id="solar-total-savings" class="text-lg font-bold text-green-600">₹5,46,000</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600">Break-even Point</p>
+                                            <p id="solar-breakeven" class="text-lg font-bold">5.4 years</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="font-medium mb-2">Return on Investment Over Time</h5>
+                                <div class="bg-white rounded-md p-2">
+                                    <canvas id="solarChart" height="200"></canvas>
+                                </div>
+                                
+                                <div class="mt-4 bg-green-50 p-3 rounded-md">
+                                    <h5 class="font-medium text-green-800 mb-1">Environmental Impact</h5>
+                                    <div class="grid grid-cols-2 gap-2 text-sm">
+                                        <div>
+                                            <p class="text-gray-600">CO₂ Reduction (Annual)</p>
+                                            <p id="co2-reduction" class="font-bold">3,240 kg</p>
+                                        </div>
+                                        <div>
+                                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                                <div>
+                                                    <p class="text-gray-600">CO₂ Reduction (Annual)</p>
+                                                    <p id="co2-reduction" class="font-bold">3,240 kg</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-gray-600">Lifetime CO₂ Reduction</p>
+                                                    <p id="lifetime-co2" class="font-bold">48,600 kg</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-gray-600">Equivalent Trees Planted</p>
+                                                    <p id="trees-equivalent" class="font-bold">216 trees</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-gray-600">Carbon Payback Time</p>
+                                                    <p id="carbon-payback" class="font-bold">1.2 years</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 text-center">
+                                            <button id="solar-report" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md">
+                                                Generate Solar Proposal
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Usage Habits Tab -->
+                        <div id="content-habits" class="tab-content hidden">
+                            <h3 class="text-lg font-semibold mb-4">Simulate Usage Habit Changes</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Usage Habits Inputs -->
+                                <div>
+                                    <h4 class="font-medium mb-3">Modify Your Usage Patterns</h4>
+                                    
+                                    <div class="mb-6">
+                                        <div class="bg-indigo-50 p-4 rounded-md mb-4">
+                                            <h5 class="font-medium text-indigo-800 mb-2">Shift Usage to Off-Peak Hours</h5>
+                                            <p class="text-sm text-gray-600 mb-3">Many utilities offer lower rates during off-peak hours (typically 10 PM - 6 AM).</p>
+                                            
+                                            <div class="space-y-3">
+                                                <div>
+                                                    <label for="peak-percentage" class="block text-sm font-medium text-gray-700 mb-1">Percentage of Usage During Peak Hours</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="peak-percentage" min="10" max="90" value="70" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                                        <span id="peak-value" class="text-sm font-medium bg-indigo-100 text-indigo-800 py-1 px-2 rounded-md">70%</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="offpeak-washing" class="h-4 w-4 text-indigo-600" checked>
+                                                    <label for="offpeak-washing" class="ml-2 text-sm">
+                                                        Shift washing machine to off-peak hours
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="offpeak-dishwasher" class="h-4 w-4 text-indigo-600" checked>
+                                                    <label for="offpeak-dishwasher" class="ml-2 text-sm">
+                                                        Shift dishwasher to off-peak hours
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="offpeak-water" class="h-4 w-4 text-indigo-600">
+                                                    <label for="offpeak-water" class="ml-2 text-sm">
+                                                        Shift water heating to off-peak hours
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-purple-50 p-4 rounded-md mb-4">
+                                            <h5 class="font-medium text-purple-800 mb-2">Temperature Adjustments</h5>
+                                            
+                                            <div class="space-y-3">
+                                                <div>
+                                                    <label for="ac-temp" class="block text-sm font-medium text-gray-700 mb-1">Air Conditioner Temperature</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="ac-temp" min="18" max="28" value="24" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                                        <span id="ac-temp-value" class="text-sm font-medium bg-purple-100 text-purple-800 py-1 px-2 rounded-md">24°C</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">Every 1°C increase saves approximately 6% energy</p>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label for="fridge-temp" class="block text-sm font-medium text-gray-700 mb-1">Refrigerator Temperature</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="fridge-temp" min="1" max="8" value="4" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                                        <span id="fridge-temp-value" class="text-sm font-medium bg-purple-100 text-purple-800 py-1 px-2 rounded-md">4°C</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-red-50 p-4 rounded-md mb-4">
+                                            <h5 class="font-medium text-red-800 mb-2">Standby Power Reduction</h5>
+                                            
+                                            <div class="space-y-3">
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="smart-strips" class="h-4 w-4 text-red-600" checked>
+                                                    <label for="smart-strips" class="ml-2 text-sm">
+                                                        Use smart power strips for entertainment devices
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="unplug-chargers" class="h-4 w-4 text-red-600" checked>
+                                                    <label for="unplug-chargers" class="ml-2 text-sm">
+                                                        Unplug chargers when not in use
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="switch-off" class="h-4 w-4 text-red-600">
+                                                    <label for="switch-off" class="ml-2 text-sm">
+                                                        Completely switch off devices (not standby)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mt-2">
+                                                <p class="text-xs text-gray-600">Standby power can account for 5-10% of household electricity use</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-teal-50 p-4 rounded-md">
+                                            <h5 class="font-medium text-teal-800 mb-2">Seasonal Adjustments</h5>
+                                            
+                                            <div class="space-y-3">
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="natural-cooling" class="h-4 w-4 text-teal-600" checked>
+                                                    <label for="natural-cooling" class="ml-2 text-sm">
+                                                        Use natural cooling instead of AC when possible
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="ceiling-fans" class="h-4 w-4 text-teal-600" checked>
+                                                    <label for="ceiling-fans" class="ml-2 text-sm">
+                                                        Use ceiling fans with AC at higher temperature
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-2 bg-white rounded-md">
+                                                    <input type="checkbox" id="daylight" class="h-4 w-4 text-teal-600" checked>
+                                                    <label for="daylight" class="ml-2 text-sm">
+                                                        Maximize natural daylight use
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Usage Habits Results -->
+                                <div>
+                                    <h4 class="font-medium mb-3">Estimated Savings</h4>
+                                    
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <div class="mb-6">
+                                            <label for="habits-duration" class="block text-sm font-medium text-gray-700 mb-1">Simulation Period</label>
+                                            <div class="flex items-center space-x-2">
+                                                <input type="range" id="habits-duration" min="1" max="12" value="6" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                                <span id="habits-duration-value" class="text-sm font-medium bg-green-100 text-green-800 py-1 px-2 rounded-md">6 months</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-white p-4 rounded-md shadow-sm mb-4">
+                                            <h5 class="font-medium mb-3">Savings by Category</h5>
+                                            <div class="space-y-3">
+                                                <div class="relative pt-1">
+                                                    <div class="flex items-center justify-between">
+                                                        <div>
+                                                            <span class="text-sm font-medium text-indigo-700">Off-Peak Usage</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <span class="text-sm font-semibold text-indigo-700" id="offpeak-savings">₹380/month</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="overflow-hidden h-2 mt-1 rounded-full bg-gray-200">
+                                                        <div class="bg-indigo-500 h-2 rounded-full" style="width: 38%"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="relative pt-1">
+                                                    <div class="flex items-center justify-between">
+                                                        <div>
+                                                            <span class="text-sm font-medium text-purple-700">Temperature Adjustments</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <span class="text-sm font-semibold text-purple-700" id="temp-savings">₹320/month</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="overflow-hidden h-2 mt-1 rounded-full bg-gray-200">
+                                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 32%"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="relative pt-1">
+                                                    <div class="flex items-center justify-between">
+                                                        <div>
+                                                            <span class="text-sm font-medium text-red-700">Standby Reduction</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <span class="text-sm font-semibold text-red-700" id="standby-savings">₹150/month</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="overflow-hidden h-2 mt-1 rounded-full bg-gray-200">
+                                                        <div class="bg-red-500 h-2 rounded-full" style="width: 15%"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="relative pt-1">
+                                                    <div class="flex items-center justify-between">
+                                                        <div>
+                                                            <span class="text-sm font-medium text-teal-700">Seasonal Adjustments</span>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <span class="text-sm font-semibold text-teal-700" id="seasonal-savings">₹250/month</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="overflow-hidden h-2 mt-1 rounded-full bg-gray-200">
+                                                        <div class="bg-teal-500 h-2 rounded-full" style="width: 25%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-4 mb-4">
+                                            <div class="bg-white p-3 rounded-md shadow-sm">
+                                                <p class="text-sm text-gray-600">Total Monthly Savings</p>
+                                                <p id="habits-monthly-savings" class="text-xl font-bold text-green-600">₹1,100</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-md shadow-sm">
+                                                <p class="text-sm text-gray-600">Total Period Savings</p>
+                                                <p id="habits-total-savings" class="text-xl font-bold text-green-600">₹6,600</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-md shadow-sm">
+                                                <p class="text-sm text-gray-600">Energy Reduction</p>
+                                                <p id="habits-energy-reduction" class="text-xl font-bold">36%</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-md shadow-sm">
+                                                <p class="text-sm text-gray-600">CO₂ Reduction</p>
+                                                <p id="habits-co2-reduction" class="text-xl font-bold">984 kg</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="font-medium mb-2">Monthly Savings Comparison</h5>
+                                        <div class="bg-white rounded-md p-2">
+                                            <canvas id="habitsChart" height="200"></canvas>
+                                        </div>
+                                        
+                                        <div class="mt-6 bg-blue-50 p-4 rounded-md">
+                                            <h5 class="font-medium text-blue-800 mb-2">Top Recommendations</h5>
+                                            <ul class="space-y-2 text-sm">
+                                                <li class="flex space-x-2">
+                                                    <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Increase AC temperature from 22°C to 24°C to save ₹240/month</span>
+                                                </li>
+                                                <li class="flex space-x-2">
+                                                    <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Run washing machine during off-peak hours to save ₹180/month</span>
+                                                </li>
+                                                <li class="flex space-x-2">
+                                                    <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Use smart power strips to eliminate standby power and save ₹150/month</span>
+                                                </li>
+                                                <li class="flex space-x-2">
+                                                    <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Use natural ventilation in morning/evening to reduce AC usage</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="mt-4 text-center">
+                                            <button id="habits-calendar" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md">
+                                                Generate Energy Calendar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combined Savings Report -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Combined Savings Report</h2>
+                    
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Combined Savings Chart -->
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-3">Total Savings Comparison</h4>
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <canvas id="combinedSavingsChart" height="250"></canvas>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h4 class="font-medium mb-2">Return on Investment Comparison</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full bg-white border border-gray-200">
+                                        <thead>
+                                            <tr class="bg-gray-100 text-gray-600 uppercase text-xs leading-normal">
+                                                <th class="py-3 px-4 text-left">Approach</th>
+                                                <th class="py-3 px-4 text-center">Initial Cost</th>
+                                                <th class="py-3 px-4 text-center">Annual Savings</th>
+                                                <th class="py-3 px-4 text-center">Break-even</th>
+                                                <th class="py-3 px-4 text-center">10-Year ROI</th>
+                                                <th class="py-3 px-4 text-center">CO₂ Reduction</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 text-sm">
+                                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                                <td class="py-2 px-4 text-left">Appliance Upgrades</td>
+                                                <td class="py-2 px-4 text-center">₹79,500</td>
+                                                <td class="py-2 px-4 text-center text-green-600">₹14,400</td>
+                                                <td class="py-2 px-4 text-center">5.5 years</td>
+                                                <td class="py-2 px-4 text-center">181%</td>
+                                                <td class="py-2 px-4 text-center">1,728 kg/year</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                                <td class="py-2 px-4 text-left">Solar Installation</td>
+                                                <td class="py-2 px-4 text-center">₹1,60,000</td>
+                                                <td class="py-2 px-4 text-center text-green-600">₹29,760</td>
+                                                <td class="py-2 px-4 text-center">5.4 years</td>
+                                                <td class="py-2 px-4 text-center">186%</td>
+                                                <td class="py-2 px-4 text-center">3,240 kg/year</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                                <td class="py-2 px-4 text-left">Usage Habits</td>
+                                                <td class="py-2 px-4 text-center">₹0</td>
+                                                <td class="py-2 px-4 text-center text-green-600">₹13,200</td>
+                                                <td class="py-2 px-4 text-center">Immediate</td>
+                                                <td class="py-2 px-4 text-center">∞</td>
+                                                <td class="py-2 px-4 text-center">1,968 kg/year</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200 hover:bg-gray-50 font-medium bg-green-50">
+                                                <td class="py-2 px-4 text-left">All Combined</td>
+                                                <td class="py-2 px-4 text-center">₹2,39,500</td>
+                                                <td class="py-2 px-4 text-center text-green-600">₹57,360</td>
+                                                <td class="py-2 px-4 text-center">4.2 years</td>
+                                                <td class="py-2 px-4 text-center">240%</td>
+                                                <td class="py-2 px-4 text-center">6,936 kg/year</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recommended Plan -->
+                        <div class="md:w-80">
+                            <h4 class="font-medium mb-3">Recommended Savings Plan</h4>
+                            <div class="bg-green-50 p-4 rounded-md">
+                                <h5 class="font-medium text-green-800 mb-3">Your Optimized Path</h5>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <h6 class="font-medium">Phase 1: Immediate (0-1 month)</h6>
+                                        <ul class="text-sm mt-2 space-y-1">
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Implement usage habit changes</span>
+                                            </li>
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Replace all lighting with LEDs</span>
+                                            </li>
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Install smart power strips</span>
+                                            </li>
+                                        </ul>
+                                        <div class="mt-2 text-xs text-green-600">
+                                            Initial cost: ₹3,500 • Monthly savings: ₹1,250
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <h6 class="font-medium">Phase 2: Short-term (1-6 months)</h6>
+                                        <ul class="text-sm mt-2 space-y-1">
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Replace refrigerator with 5★ model</span>
+                                            </li>
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Replace AC with 5★ inverter model</span>
+                                            </li>
+                                        </ul>
+                                        <div class="mt-2 text-xs text-green-600">
+                                            Initial cost: ₹76,000 • Monthly savings: ₹1,080
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white p-3 rounded-md shadow-sm">
+                                        <h6 class="font-medium">Phase 3: Medium-term (6-12 months)</h6>
+                                        <ul class="text-sm mt-2 space-y-1">
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Install 3kW solar system with grid tie</span>
+                                            </li>
+                                            <li class="flex items-start space-x-1">
+                                                <span class="text-green-600">✓</span>
+                                                <span>Apply for government subsidy</span>
+                                            </li>
+                                        </ul>
+                                        <div class="mt-2 text-xs text-green-600">
+                                            Initial cost: ₹1,60,000 • Monthly savings: ₹2,480
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 p-3 bg-white rounded-md shadow-sm">
+                                    <h6 class="font-medium text-green-700">Total Impact (Year 1)</h6>
+                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                        <div>
+                                            <p class="text-xs text-gray-500">Investment</p>
+                                            <p class="font-bold">₹2,39,500</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">Annual Savings</p>
+                                            <p class="font-bold text-green-600">₹57,360</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">5-Year Savings</p>
+                                            <p class="font-bold text-green-600">₹3,27,300</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-500">CO₂ Reduction</p>
+                                            <p class="font-bold">34.7 tonnes</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 text-center">
+                                    <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md">
+                                        Download Complete Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Tab switching
+                    const tabButtons = document.querySelectorAll('.tab-button');
+                    const tabContents = document.querySelectorAll('.tab-content');
+                    
+                    tabButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            // Deactivate all tabs
+                            tabButtons.forEach(btn => {
+                                btn.classList.remove('border-green-500', 'text-green-600');
+                                btn.classList.add('border-transparent', 'text-gray-500');
+                            });
+                            
+                            // Hide all content
+                            tabContents.forEach(content => {
+                                content.classList.add('hidden');
+                            });
+                            
+                            // Activate clicked tab
+                            this.classList.remove('border-transparent', 'text-gray-500');
+                            this.classList.add('border-green-500', 'text-green-600');
+                            
+                            // Show corresponding content
+                            const contentId = 'content-' + this.id.split('-')[1];
+                            document.getElementById(contentId).classList.remove('hidden');
+                            
+                            // Update charts
+                            // Update charts
+updateAllCharts();
+                });
+            });
+            
+            // Initialize first tab as active
+            document.getElementById('tab-overview').click();
+            
+           // Fix slider value updates
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all range sliders
+    const sliders = document.querySelectorAll('input[type="range"]');
+    
+    // Add input event listener to each slider
+    sliders.forEach(slider => {
+        slider.addEventListener('input', function() {
+            const valueDisplay = document.getElementById(`${this.id}-value`);
+            if (valueDisplay) {
+                // Update the displayed value in real-time
+                if (this.id === 'solar-size') {
+                    valueDisplay.textContent = this.value + ' kW';
+                } else if (this.id === 'solar-duration') {
+                    valueDisplay.textContent = this.value + ' years';
+                } else if (this.id === 'peak-percentage') {
+                    valueDisplay.textContent = this.value + '%';
+                } else if (this.id === 'ac-temp') {
+                    valueDisplay.textContent = this.value + '°C';
+                } else if (this.id === 'fridge-temp') {
+                    valueDisplay.textContent = this.value + '°C';
+                } else if (this.id === 'habits-duration') {
+                    valueDisplay.textContent = this.value + ' months';
+                } else {
+                    valueDisplay.textContent = this.value;
+                }
+            }
+            
+            // Trigger calculation updates
+            if (this.id.includes('solar')) {
+                updateSolarSavings();
+            } else if (this.id.includes('peak') || this.id.includes('temp') || this.id.includes('habits')) {
+                updateHabitsSavings();
+            }
+        });
+    });
+});
+
+            
+            // Checkbox event listeners for habits
+            const habitCheckboxes = document.querySelectorAll('#content-habits input[type="checkbox"]');
+            habitCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateHabitsSavings);
+            });
+            
+            // Appliance checkbox listeners
+            const applianceCheckboxes = document.querySelectorAll('#content-appliances input[type="checkbox"]');
+            applianceCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateApplianceSavings);
+            });
+            
+            // Solar panel slider listeners
+            document.getElementById('solar-size').addEventListener('input', function() {
+                document.getElementById('solar-size-value').textContent = this.value + ' kW';
+                updateSolarSavings();
+            });
+            
+            document.getElementById('solar-duration').addEventListener('input', function() {
+                document.getElementById('solar-duration-value').textContent = this.value + ' years';
+                updateSolarSavings();
+            });
+            
+            // Initialize values
+            updateHabitsSavings();
+            updateApplianceSavings();
+            updateSolarSavings();
+            updateCombinedSavings();
+            
+            // Functions to update savings calculations
+            function updateHabitsSavings() {
+                const peakPercentage = parseInt(document.getElementById('peak-percentage').value);
+                const acTemp = parseInt(document.getElementById('ac-temp').value);
+                const fridgeTemp = parseInt(document.getElementById('fridge-temp').value);
+                const duration = parseInt(document.getElementById('habits-duration').value);
+                
+                // Calculate savings based on slider values and checkboxes
+                let offpeakSavings = Math.round(400 * (1 - (peakPercentage / 100)));
+                if (document.getElementById('offpeak-washing').checked) offpeakSavings += 180;
+                if (document.getElementById('offpeak-dishwasher').checked) offpeakSavings += 120;
+                if (document.getElementById('offpeak-water').checked) offpeakSavings += 80;
+                
+                // Temperature savings
+                const acSavings = Math.round(40 * (acTemp - 22));
+                const fridgeSavings = Math.round(30 * (4 - fridgeTemp));
+                const tempSavings = Math.max(0, acSavings + fridgeSavings);
+                
+                // Standby savings
+                let standbySavings = 0;
+                if (document.getElementById('smart-strips').checked) standbySavings += 80;
+                if (document.getElementById('unplug-chargers').checked) standbySavings += 30;
+                if (document.getElementById('switch-off').checked) standbySavings += 40;
+                
+                // Seasonal savings
+                let seasonalSavings = 0;
+                if (document.getElementById('natural-cooling').checked) seasonalSavings += 120;
+                if (document.getElementById('ceiling-fans').checked) seasonalSavings += 80;
+                if (document.getElementById('daylight').checked) seasonalSavings += 50;
+                
+                // Total monthly savings
+                const monthlySavings = offpeakSavings + tempSavings + standbySavings + seasonalSavings;
+                const totalSavings = monthlySavings * duration;
+                
+                // Energy reduction percentage
+                const energyReduction = Math.round(monthlySavings / 3000 * 100);
+                
+                // CO2 reduction
+                const co2Reduction = Math.round(monthlySavings / 1.12);
+                
+                // Update UI
+                document.getElementById('offpeak-savings').textContent = '₹' + offpeakSavings + '/month';
+                document.getElementById('temp-savings').textContent = '₹' + tempSavings + '/month';
+                document.getElementById('standby-savings').textContent = '₹' + standbySavings + '/month';
+                document.getElementById('seasonal-savings').textContent = '₹' + seasonalSavings + '/month';
+                
+                document.getElementById('habits-monthly-savings').textContent = '₹' + monthlySavings;
+                document.getElementById('habits-total-savings').textContent = '₹' + totalSavings;
+                document.getElementById('habits-energy-reduction').textContent = energyReduction + '%';
+                document.getElementById('habits-co2-reduction').textContent = co2Reduction + ' kg';
+                
+                // Update the habits chart
+                updateHabitsChart(offpeakSavings, tempSavings, standbySavings, seasonalSavings);
+                
+                // Also update combined savings when habits change
+                updateCombinedSavings();
+            }
+            
+            function updateApplianceSavings() {
+                let totalInvestment = 0;
+                let totalSavings = 0;
+                let totalCO2Reduction = 0;
+                
+                // Calculate based on selected appliances
+                if (document.getElementById('upgrade-ac').checked) {
+                    totalInvestment += 45000;
+                    totalSavings += 450;
+                    totalCO2Reduction += 648;
+                }
+                
+                if (document.getElementById('upgrade-refrigerator').checked) {
+                    totalInvestment += 28000;
+                    totalSavings += 380;
+                    totalCO2Reduction += 547;
+                }
+                
+                if (document.getElementById('upgrade-washing').checked) {
+                    totalInvestment += 16000;
+                    totalSavings += 220;
+                    totalCO2Reduction += 316;
+                }
+                
+                if (document.getElementById('upgrade-lights').checked) {
+                    totalInvestment += 3500;
+                    totalSavings += 150;
+                    totalCO2Reduction += 216;
+                }
+                
+                if (document.getElementById('upgrade-fans').checked) {
+                    totalInvestment += 8000;
+                    totalSavings += 180;
+                    totalCO2Reduction += 259;
+                }
+                
+                // Calculate derived values
+                const annualSavings = totalSavings * 12;
+                const paybackYears = totalInvestment / annualSavings;
+                const paybackTime = paybackYears.toFixed(1) + ' years';
+                const roi10Year = Math.round((annualSavings * 10 - totalInvestment) / totalInvestment * 100);
+                
+                // Update UI
+                document.getElementById('appliance-investment').textContent = '₹' + totalInvestment;
+                document.getElementById('appliance-monthly').textContent = '₹' + totalSavings;
+                document.getElementById('appliance-annual').textContent = '₹' + annualSavings;
+                document.getElementById('appliance-payback').textContent = paybackTime;
+                document.getElementById('appliance-roi').textContent = roi10Year + '%';
+                document.getElementById('appliance-co2').textContent = totalCO2Reduction + ' kg';
+                
+                // Update appliance chart
+                updateApplianceChart();
+                
+                // Also update combined savings
+                updateCombinedSavings();
+            }
+            
+            function updateSolarSavings() {
+                const solarSize = parseFloat(document.getElementById('solar-size').value);
+                const duration = parseInt(document.getElementById('solar-duration').value);
+                
+                // Calculate solar values
+                const installationCost = Math.round(solarSize * 53333);
+                const monthlyProduction = Math.round(solarSize * 120);
+                const monthlySavings = Math.round(monthlyProduction * 8.3);
+                const annualSavings = monthlySavings * 12;
+                const lifetimeSavings = annualSavings * 25;
+                
+                const paybackYears = installationCost / annualSavings;
+                const subsidyAmount = Math.min(31200, installationCost * 0.4);
+                const netCost = installationCost - subsidyAmount;
+                const paybackWithSubsidy = netCost / annualSavings;
+                
+                // CO2 calculations
+                const co2Reduction = Math.round(solarSize * 1080);
+                const lifetimeCO2 = Math.round(co2Reduction * 15);
+                const treesEquivalent = Math.round(co2Reduction / 15);
+                const carbonPayback = 1.2;
+                
+                // Update UI
+                document.getElementById('solar-cost').textContent = '₹' + installationCost;
+                document.getElementById('solar-subsidy').textContent = '₹' + subsidyAmount;
+                document.getElementById('solar-net-cost').textContent = '₹' + netCost;
+                document.getElementById('solar-production').textContent = monthlyProduction + ' kWh';
+                document.getElementById('solar-monthly').textContent = '₹' + monthlySavings;
+                document.getElementById('solar-annual').textContent = '₹' + annualSavings;
+                document.getElementById('solar-lifetime').textContent = '₹' + lifetimeSavings;
+                document.getElementById('solar-payback').textContent = paybackYears.toFixed(1) + ' years';
+                document.getElementById('solar-payback-subsidy').textContent = paybackWithSubsidy.toFixed(1) + ' years';
+                
+                document.getElementById('co2-reduction').textContent = co2Reduction + ' kg';
+                document.getElementById('lifetime-co2').textContent = lifetimeCO2 + ' kg';
+                document.getElementById('trees-equivalent').textContent = treesEquivalent + ' trees';
+                document.getElementById('carbon-payback').textContent = carbonPayback + ' years';
+                
+                // Update solar chart
+                updateSolarChart(duration, monthlySavings, installationCost);
+                
+                // Also update combined savings
+                updateCombinedSavings();
+            }
+            
+            // Charts
+            let habitsChart, applianceChart, solarChart, combinedChart;
+            
+            // Fix chart visibility
+function initializeCharts() {
+    // Set canvas dimensions explicitly
+    const chartCanvases = document.querySelectorAll('canvas');
+    chartCanvases.forEach(canvas => {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = 300; // Set a reasonable height
+        
+        // Ensure canvas is visible
+        canvas.style.display = 'block';
+    });
+    
+    // Initialize all charts
+    updateHabitsChart();
+    updateApplianceChart();
+    updateSolarChart();
+    updateCombinedChart();
+}
+
+// Call this after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize charts after a slight delay to ensure DOM is fully rendered
+    setTimeout(initializeCharts, 100);
+});
+
+            
+            function updateHabitsChart(offpeakSavings = 380, tempSavings = 320, standbySavings = 150, seasonalSavings = 250) {
+                const ctx = document.getElementById('habitsChart').getContext('2d');
+                
+                if (habitsChart) {
+                    habitsChart.destroy();
+                }
+                
+                habitsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Current', 'With Changes'],
+                        datasets: [{
+                            label: 'Monthly Expense (₹)',
+                            data: [3000, 3000 - offpeakSavings - tempSavings - standbySavings - seasonalSavings],
+                            backgroundColor: ['#f87171', '#34d399'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 3500
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateApplianceChart() {
+                const ctx = document.getElementById('applianceChart').getContext('2d');
+                
+                const upgrades = [];
+                const savings = [];
+                
+                if (document.getElementById('upgrade-ac').checked) {
+                    upgrades.push('AC');
+                    savings.push(450);
+                }
+                
+                if (document.getElementById('upgrade-refrigerator').checked) {
+                    upgrades.push('Refrigerator');
+                    savings.push(380);
+                }
+                
+                if (document.getElementById('upgrade-washing').checked) {
+                    upgrades.push('Washing Machine');
+                    savings.push(220);
+                }
+                
+                if (document.getElementById('upgrade-lights').checked) {
+                    upgrades.push('LED Lights');
+                    savings.push(150);
+                }
+                
+                if (document.getElementById('upgrade-fans').checked) {
+                    upgrades.push('BLDC Fans');
+                    savings.push(180);
+                }
+                
+                if (applianceChart) {
+                    applianceChart.destroy();
+                }
+                
+                applianceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: upgrades,
+                        datasets: [{
+                            label: 'Monthly Savings (₹)',
+                            data: savings,
+                            backgroundColor: '#60a5fa',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateSolarChart(years = 10, monthlySavings = 2480, installationCost = 160000) {
+                const ctx = document.getElementById('solarChart').getContext('2d');
+                
+                // Generate data for solar ROI over years
+                const labels = [];
+                const savings = [];
+                const investment = [];
+                
+                for (let i = 0; i <= years; i++) {
+                    labels.push(i);
+                    savings.push(i * monthlySavings * 12);
+                    investment.push(installationCost);
+                }
+                
+                if (solarChart) {
+                    solarChart.destroy();
+                }
+                
+                solarChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Cumulative Savings',
+                                data: savings,
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                fill: true
+                            },
+                            {
+                                label: 'Installation Cost',
+                                data: investment,
+                                borderColor: '#f59e0b',
+                                borderDash: [5, 5]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Solar ROI Over Time'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Amount (₹)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Years'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateCombinedChart() {
+                const ctx = document.getElementById('combinedSavingsChart').getContext('2d');
+                
+                if (combinedChart) {
+                    combinedChart.destroy();
+                }
+                
+                combinedChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1 Year', '5 Years', '10 Years'],
+                        datasets: [
+                            {
+                                label: 'Appliance Upgrades',
+                                data: [14400, 72000, 144000],
+                                backgroundColor: '#60a5fa'
+                            },
+                            {
+                                label: 'Solar Installation',
+                                data: [29760, 148800, 297600],
+                                backgroundColor: '#10b981'
+                            },
+                            {
+                                label: 'Usage Habits',
+                                data: [13200, 66000, 132000],
+                                backgroundColor: '#8b5cf6'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Cumulative Savings by Approach'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ₹' + context.raw.toLocaleString();
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                            },
+                            y: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'Savings (₹)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+           // Realistic energy savings calculations
+function updateHabitsSavings() {
+    const peakPercentage = parseInt(document.getElementById('peak-percentage').value);
+    const acTemp = parseInt(document.getElementById('ac-temp').value);
+    const fridgeTemp = parseInt(document.getElementById('fridge-temp').value);
+    const duration = parseInt(document.getElementById('habits-duration').value);
+    
+    // Base monthly consumption and rates (based on March 2025 data)
+    const baseMonthlyConsumption = 300; // kWh
+    const avgRate = 8.5; // ₹/kWh
+    const peakRate = 10.2; // ₹/kWh
+    const offpeakRate = 6.8; // ₹/kWh
+    
+    // Calculate peak vs off-peak usage
+    const currentPeakPercentage = 65; // Assume 65% of usage is during peak hours initially
+    const newPeakPercentage = peakPercentage;
+    
+    // Calculate savings from shifting usage to off-peak hours
+    const currentPeakCost = baseMonthlyConsumption * (currentPeakPercentage/100) * peakRate;
+    const currentOffpeakCost = baseMonthlyConsumption * (1-currentPeakPercentage/100) * offpeakRate;
+    const newPeakCost = baseMonthlyConsumption * (newPeakPercentage/100) * peakRate;
+    const newOffpeakCost = baseMonthlyConsumption * (1-newPeakPercentage/100) * offpeakRate;
+    
+    const offpeakSavings = Math.round(currentPeakCost + currentOffpeakCost - newPeakCost - newOffpeakCost);
+    
+    // AC temperature impact (each degree above 22°C saves approximately 6% energy)
+    const acBaseline = 22; // °C
+    const acSavingsPercent = Math.max(0, (acTemp - acBaseline) * 6);
+    const acConsumption = 120; // kWh per month
+    const acSavings = Math.round(acConsumption * (acSavingsPercent/100) * avgRate);
+    
+    // Refrigerator temperature impact (each degree above 3°C saves approximately 5% energy)
+    const fridgeBaseline = 3; // °C
+    const fridgeSavingsPercent = Math.max(0, (fridgeTemp - fridgeBaseline) * 5);
+    const fridgeConsumption = 60; // kWh per month
+    const fridgeSavings = Math.round(fridgeConsumption * (fridgeSavingsPercent/100) * avgRate);
+    
+    const tempSavings = acSavings + fridgeSavings;
+    
+    // Standby power savings
+    let standbySavings = 0;
+    if (document.getElementById('smart-strips').checked) standbySavings += 80;
+    if (document.getElementById('unplug-chargers').checked) standbySavings += 30;
+    if (document.getElementById('switch-off').checked) standbySavings += 40;
+    
+    // Seasonal savings
+    let seasonalSavings = 0;
+    if (document.getElementById('natural-cooling').checked) seasonalSavings += 120;
+    if (document.getElementById('ceiling-fans').checked) seasonalSavings += 80;
+    if (document.getElementById('daylight').checked) seasonalSavings += 50;
+    
+    // Total monthly savings
+    const monthlySavings = offpeakSavings + tempSavings + standbySavings + seasonalSavings;
+    const totalSavings = monthlySavings * duration;
+    
+    // Energy reduction percentage
+    const baseMonthlyBill = baseMonthlyConsumption * avgRate;
+    const energyReduction = Math.round(monthlySavings / baseMonthlyBill * 100);
+    
+    // CO2 reduction (0.82 kg CO2 per kWh in India as of 2025)
+    const co2Factor = 0.82; // kg CO2/kWh
+    const energySavingsKWh = monthlySavings / avgRate;
+    const co2Reduction = Math.round(energySavingsKWh * co2Factor);
+    
+    // Update UI
+    document.getElementById('offpeak-savings').textContent = '₹' + offpeakSavings + '/month';
+    document.getElementById('temp-savings').textContent = '₹' + tempSavings + '/month';
+    document.getElementById('standby-savings').textContent = '₹' + standbySavings + '/month';
+    document.getElementById('seasonal-savings').textContent = '₹' + seasonalSavings + '/month';
+    
+    document.getElementById('habits-monthly-savings').textContent = '₹' + monthlySavings;
+    document.getElementById('habits-total-savings').textContent = '₹' + totalSavings;
+    document.getElementById('habits-energy-reduction').textContent = energyReduction + '%';
+    document.getElementById('habits-co2-reduction').textContent = co2Reduction + ' kg';
+    
+    // Update the habits chart
+    updateHabitsChart(offpeakSavings, tempSavings, standbySavings, seasonalSavings);
+    
+    // Also update combined savings
+    updateCombinedSavings();
+}
+
+function updateSolarSavings() {
+    const solarSize = parseFloat(document.getElementById('solar-size').value);
+    const duration = parseInt(document.getElementById('solar-duration').value);
+    
+    // Realistic solar parameters for India in 2025
+    const costPerKW = 53000; // ₹ per kW installed
+    const dailyProduction = 4.2; // kWh per kW per day (average in India)
+    const electricityRate = 8.5; // ₹ per kWh
+    const annualDegradation = 0.7; // % panel efficiency loss per year
+    const subsidyRate = 0.4; // 40% subsidy up to a cap
+    const subsidyCap = 31200; // ₹ maximum subsidy
+    
+    // Calculate solar values
+    const installationCost = Math.round(solarSize * costPerKW);
+    const monthlyProduction = Math.round(solarSize * dailyProduction * 30);
+    const monthlySavings = Math.round(monthlyProduction * electricityRate);
+    
+    // Calculate cumulative savings with degradation
+    let cumulativeSavings = 0;
+    for (let year = 1; year <= duration; year++) {
+        const yearlyDegradation = Math.pow(1 - annualDegradation/100, year-1);
+        const yearlyProduction = monthlyProduction * 12 * yearlyDegradation;
+        const yearlySavings = yearlyProduction * electricityRate;
+        cumulativeSavings += yearlySavings;
+    }
+    
+    const annualSavings = monthlySavings * 12;
+    const lifetimeSavings = Math.round(cumulativeSavings * (25/duration)); // Extrapolate to 25 years
+    
+    const subsidyAmount = Math.min(subsidyCap, installationCost * subsidyRate);
+    const netCost = installationCost - subsidyAmount;
+    
+    // Calculate payback periods
+    const paybackYears = netCost / annualSavings;
+    
+    // CO2 calculations (0.82 kg CO2 per kWh in India as of 2025)
+    const co2Factor = 0.82; // kg CO2/kWh
+    const co2Reduction = Math.round(monthlyProduction * co2Factor);
+    const lifetimeCO2 = Math.round(co2Reduction * 12 * 25); // 25 years lifetime
+    const treesEquivalent = Math.round(co2Reduction * 12 / 15); // Each tree absorbs ~15kg CO2 per year
+    
+    // Update UI
+    document.getElementById('solar-cost').textContent = '₹' + installationCost;
+    document.getElementById('solar-subsidy').textContent = '₹' + subsidyAmount;
+    document.getElementById('solar-net-cost').textContent = '₹' + netCost;
+    document.getElementById('solar-production').textContent = monthlyProduction + ' kWh';
+    document.getElementById('solar-monthly').textContent = '₹' + monthlySavings;
+    document.getElementById('solar-annual').textContent = '₹' + annualSavings;
+    document.getElementById('solar-lifetime').textContent = '₹' + Math.round(lifetimeSavings);
+    document.getElementById('solar-payback').textContent = paybackYears.toFixed(1) + ' years';
+    
+    document.getElementById('co2-reduction').textContent = co2Reduction + ' kg';
+    document.getElementById('lifetime-co2').textContent = lifetimeCO2 + ' kg';
+    document.getElementById('trees-equivalent').textContent = treesEquivalent + ' trees';
+    
+    // Update solar chart
+    updateSolarChart(duration, monthlySavings, installationCost);
+    
+    // Also update combined savings
+    updateCombinedSavings();
+}
+
+function updateApplianceSavings() {
+    // Realistic appliance data for India in 2025
+    const applianceData = {
+        'ac': {
+            cost: 45000,
+            oldConsumption: 350, // kWh/year
+            newConsumption: 210, // kWh/year
+            lifespan: 10 // years
+        },
+        'refrigerator': {
+            cost: 28000,
+            oldConsumption: 420,
+            newConsumption: 250,
+            lifespan: 12
+        },
+        'washing': {
+            cost: 16000,
+            oldConsumption: 180,
+            newConsumption: 110,
+            lifespan: 8
+        },
+        'lights': {
+            cost: 3500,
+            oldConsumption: 250,
+            newConsumption: 80,
+            lifespan: 15
+        },
+        'fans': {
+            cost: 8000,
+            oldConsumption: 200,
+            newConsumption: 80,
+            lifespan: 10
+        }
+    };
+    
+    const electricityRate = 8.5; // ₹ per kWh
+    
+    let totalInvestment = 0;
+    let totalSavings = 0;
+    let totalCO2Reduction = 0;
+    
+    // Calculate based on selected appliances
+    if (document.getElementById('upgrade-ac').checked) {
+        const data = applianceData.ac;
+        const annualSavings = (data.oldConsumption - data.newConsumption) * electricityRate;
+        totalInvestment += data.cost;
+        totalSavings += annualSavings / 12; // Monthly savings
+        totalCO2Reduction += (data.oldConsumption - data.newConsumption) * 0.82;
+    }
+    
+    if (document.getElementById('upgrade-refrigerator').checked) {
+        const data = applianceData.refrigerator;
+        const annualSavings = (data.oldConsumption - data.newConsumption) * electricityRate;
+        totalInvestment += data.cost;
+        totalSavings += annualSavings / 12;
+        totalCO2Reduction += (data.oldConsumption - data.newConsumption) * 0.82;
+    }
+    
+    if (document.getElementById('upgrade-washing').checked) {
+        const data = applianceData.washing;
+        const annualSavings = (data.oldConsumption - data.newConsumption) * electricityRate;
+        totalInvestment += data.cost;
+        totalSavings += annualSavings / 12;
+        totalCO2Reduction += (data.oldConsumption - data.newConsumption) * 0.82;
+    }
+    
+    if (document.getElementById('upgrade-lights').checked) {
+        const data = applianceData.lights;
+        const annualSavings = (data.oldConsumption - data.newConsumption) * electricityRate;
+        totalInvestment += data.cost;
+        totalSavings += annualSavings / 12;
+        totalCO2Reduction += (data.oldConsumption - data.newConsumption) * 0.82;
+    }
+    
+    if (document.getElementById('upgrade-fans').checked) {
+        const data = applianceData.fans;
+        const annualSavings = (data.oldConsumption - data.newConsumption) * electricityRate;
+        totalInvestment += data.cost;
+        totalSavings += annualSavings / 12;
+        totalCO2Reduction += (data.oldConsumption - data.newConsumption) * 0.82;
+    }
+    
+    // Round values for display
+    totalSavings = Math.round(totalSavings);
+    totalCO2Reduction = Math.round(totalCO2Reduction);
+    
+    // Calculate derived values
+    const annualSavings = totalSavings * 12;
+    const paybackYears = totalInvestment / annualSavings;
+    const paybackTime = paybackYears.toFixed(1) + ' years';
+    const roi10Year = Math.round((annualSavings * 10 - totalInvestment) / totalInvestment * 100);
+    
+    // Update UI
+    document.getElementById('appliance-investment').textContent = '₹' + totalInvestment;
+    document.getElementById('appliance-monthly').textContent = '₹' + totalSavings;
+    document.getElementById('appliance-annual').textContent = '₹' + annualSavings;
+    document.getElementById('appliance-payback').textContent = paybackTime;
+    document.getElementById('appliance-roi').textContent = roi10Year + '%';
+    document.getElementById('appliance-co2').textContent = totalCO2Reduction + ' kg';
+    
+    // Update appliance chart
+    updateApplianceChart();
+    
+    // Also update combined savings
+    updateCombinedSavings();
+}
+function updateApplianceChart() {
+    const ctx = document.getElementById('applianceChart').getContext('2d');
+    
+    const upgrades = [];
+    const savings = [];
+    
+    if (document.getElementById('upgrade-ac').checked) {
+        upgrades.push('AC');
+        savings.push(450);
+    }
+    
+    if (document.getElementById('upgrade-refrigerator').checked) {
+        upgrades.push('Refrigerator');
+        savings.push(380);
+    }
+    
+    if (document.getElementById('upgrade-washing').checked) {
+        upgrades.push('Washing Machine');
+        savings.push(220);
+    }
+    
+    if (document.getElementById('upgrade-lights').checked) {
+        upgrades.push('LED Lights');
+        savings.push(150);
+    }
+    
+    if (document.getElementById('upgrade-fans').checked) {
+        upgrades.push('BLDC Fans');
+        savings.push(180);
+    }
+    
+    if (applianceChart) {
+        applianceChart.destroy();
+    }
+    
+    applianceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: upgrades,
+            datasets: [{
+                label: 'Monthly Savings (₹)',
+                data: savings,
+                backgroundColor: '#60a5fa',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Monthly Savings (₹)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '₹' + context.raw + ' per month';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateSolarChart(years = 10, monthlySavings = 2480, installationCost = 160000) {
+    const ctx = document.getElementById('solarChart').getContext('2d');
+    
+    // Generate data for solar ROI over years
+    const labels = [];
+    const savings = [];
+    const investment = [];
+    const subsidizedInvestment = [];
+    
+    // Calculate subsidy
+    const subsidyAmount = Math.min(31200, installationCost * 0.4);
+    const netCost = installationCost - subsidyAmount;
+    
+    for (let i = 0; i <= years; i++) {
+        labels.push(i);
+        savings.push(i * monthlySavings * 12);
+        investment.push(installationCost);
+        subsidizedInvestment.push(netCost);
+    }
+    
+    // Calculate break-even point with subsidy
+    const breakEvenYear = Math.ceil(netCost / (monthlySavings * 12));
+    
+    if (solarChart) {
+        solarChart.destroy();
+    }
+    
+    solarChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Cumulative Savings',
+                    data: savings,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                },
+                {
+                    label: 'Installation Cost (without subsidy)',
+                    data: investment,
+                    borderColor: '#f59e0b',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0
+                },
+                {
+                    label: 'Installation Cost (with subsidy)',
+                    data: subsidizedInvestment,
+                    borderColor: '#8b5cf6',
+                    borderDash: [3, 3],
+                    fill: false,
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Solar ROI Over Time',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ₹' + context.raw.toLocaleString();
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        breakEvenLine: {
+                            type: 'line',
+                            xMin: breakEvenYear,
+                            xMax: breakEvenYear,
+                            borderColor: 'rgba(255, 99, 132, 0.5)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                content: 'Break-even point',
+                                enabled: true,
+                                position: 'top'
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Amount (₹)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Years'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateCombinedChart() {
+    const ctx = document.getElementById('combinedSavingsChart').getContext('2d');
+    
+    // Get current savings values from each category
+    const habitsMonthlySavings = parseInt(document.getElementById('habits-monthly-savings').textContent.replace('₹', '')) || 0;
+    const applianceMonthlySavings = parseInt(document.getElementById('appliance-monthly').textContent.replace('₹', '')) || 0;
+    const solarMonthlySavings = parseInt(document.getElementById('solar-monthly').textContent.replace('₹', '')) || 0;
+    
+    // Calculate cumulative savings for different time periods
+    const habitsYearly = habitsMonthlySavings * 12;
+    const applianceYearly = applianceMonthlySavings * 12;
+    const solarYearly = solarMonthlySavings * 12;
+    
+    if (combinedChart) {
+        combinedChart.destroy();
+    }
+    
+    combinedChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['1 Year', '5 Years', '10 Years'],
+            datasets: [
+                {
+                    label: 'Appliance Upgrades',
+                    data: [applianceYearly, applianceYearly * 5, applianceYearly * 10],
+                    backgroundColor: '#60a5fa'
+                },
+                {
+                    label: 'Solar Installation',
+                    data: [solarYearly, solarYearly * 5, solarYearly * 10],
+                    backgroundColor: '#10b981'
+                },
+                {
+                    label: 'Usage Habits',
+                    data: [habitsYearly, habitsYearly * 5, habitsYearly * 10],
+                    backgroundColor: '#8b5cf6'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Cumulative Savings by Approach',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ₹' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: 'Savings (₹)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    // Update the combined savings summary
+    updateCombinedSavingsSummary();
+}
+
+function updateCombinedSavingsSummary() {
+    // Get current savings values from each category
+    const habitsMonthlySavings = parseInt(document.getElementById('habits-monthly-savings').textContent.replace('₹', '')) || 0;
+    const applianceMonthlySavings = parseInt(document.getElementById('appliance-monthly').textContent.replace('₹', '')) || 0;
+    const solarMonthlySavings = parseInt(document.getElementById('solar-monthly').textContent.replace('₹', '')) || 0;
+    
+    // Calculate total monthly and annual savings
+    const totalMonthlySavings = habitsMonthlySavings + applianceMonthlySavings + solarMonthlySavings;
+    const totalAnnualSavings = totalMonthlySavings * 12;
+    
+    // Get investment costs
+    const applianceInvestment = parseInt(document.getElementById('appliance-investment').textContent.replace('₹', '')) || 0;
+    const solarNetCost = parseInt(document.getElementById('solar-net-cost').textContent.replace('₹', '')) || 0;
+    const totalInvestment = applianceInvestment + solarNetCost;
+    
+    // Calculate payback period
+    const paybackYears = totalInvestment / totalAnnualSavings;
+    
+    // Calculate CO2 reduction
+    const habitsCO2 = parseInt(document.getElementById('habits-co2-reduction').textContent.replace(' kg', '')) || 0;
+    const applianceCO2 = parseInt(document.getElementById('appliance-co2').textContent.replace(' kg', '')) || 0;
+    const solarCO2 = parseInt(document.getElementById('co2-reduction').textContent.replace(' kg', '')) || 0;
+    const totalCO2 = habitsCO2 + applianceCO2 + solarCO2;
+    
+    // Update the summary UI
+    document.getElementById('total-monthly-savings').textContent = '₹' + totalMonthlySavings.toLocaleString();
+    document.getElementById('total-annual-savings').textContent = '₹' + totalAnnualSavings.toLocaleString();
+    document.getElementById('total-investment').textContent = '₹' + totalInvestment.toLocaleString();
+    document.getElementById('total-payback').textContent = paybackYears.toFixed(1) + ' years';
+    document.getElementById('total-co2').textContent = totalCO2.toLocaleString() + ' kg';
+    document.getElementById('total-trees').textContent = Math.round(totalCO2 / 15) + ' trees';
+}
+
+
+            
+            // Button click handlers
+            document.getElementById('solar-report').addEventListener('click', function() {
+                alert('Generating solar proposal with current settings...');
+                // In a real application, this would generate a PDF or detailed report
+            });
+            
+            document.getElementById('habits-calendar').addEventListener('click', function() {
+                alert('Generating energy usage calendar with recommended habits...');
+                // In a real application, this would generate a calendar or schedule
+            });
+        });
+    </script>
+</body>
