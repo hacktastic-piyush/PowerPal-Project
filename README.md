@@ -4,3 +4,6 @@ It works on the basis of the collected data from the IoT device and user input, 
 We have also made Simulator for Predicting the expense and money saved while buying a product for the home, we have also made a simulation for Solar Energy power.<br>
 Best feature it shows you in how much time you can get back your invested money and after that we will only have profit.
 <img src="images/Screenshot (141).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (142).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (143).png" alt="Dashboard" width="1000"/>
+<img src="images/Screenshot (145).png" alt="Dashboard" width="1000"/>
